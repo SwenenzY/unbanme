@@ -11,10 +11,6 @@ using OpenQA.Selenium;
 using OpenQA.Selenium.Chrome;
 using System.Threading;
 using System.IO;
-/*
-Login: szq3flgxxx78iqeqb8yrp
-Password: FPX5RNFH5P8K108
-*/
 
 namespace unbanme
 {
@@ -33,9 +29,8 @@ namespace unbanme
             ChromeDriverService service = ChromeDriverService.CreateDefaultService();
             service.HideCommandPromptWindow = true;
             ChromeOptions options = new ChromeOptions();
+            // options.AddArgument("--window-position=-32000,-32000");
 
-           // options.AddArgument("--window-position=-32000,-32000");
-     
             options.AddArgument("--lang=en-US");
             // options.AddArgument("headless");
             ChromeDriver = new ChromeDriver(service, options, TimeSpan.FromMinutes(5));
@@ -80,6 +75,20 @@ namespace unbanme
             {
                 BotThread.Start();
             }
+        }
+        private readonly Random _random = new Random();
+        public string RandomString(int size, bool lowerCase = false)
+        {
+            var builder = new StringBuilder(size);
+            char offset = lowerCase ? 'a' : 'A';
+            const int lettersOffset = 26;
+            for (var i = 0; i < size; i++)
+            {
+                var @char = (char)_random.Next(offset, offset + lettersOffset);
+                builder.Append(@char);
+            }
+
+            return lowerCase ? builder.ToString().ToLower() : builder.ToString();
         }
 
         void ChangeNameAndClearalis()
@@ -133,7 +142,16 @@ namespace unbanme
                     // isim girme
                     System.Threading.Thread.Sleep(2500);
                     ChromeDriver.FindElement(By.XPath("/html/body/div[1]/div[7]/div[3]/div/div[2]/div/div/div[3]/div[2]/div[2]/form/div[3]/div[2]/div[1]/label/div[2]/input")).SendKeys(username);
-                        
+
+                    // url temizleme
+                    System.Threading.Thread.Sleep(2500);
+                    ChromeDriver.FindElement(By.XPath("/html/body/div[1]/div[7]/div[3]/div/div[2]/div/div/div[3]/div[2]/div[2]/form/div[3]/div[2]/div[3]/label/div[2]/input")).Clear();
+
+                    // url isim girme
+                    string CUrl = RandomString(20,true);
+                    System.Threading.Thread.Sleep(2500);
+                    ChromeDriver.FindElement(By.XPath("/html/body/div[1]/div[7]/div[3]/div/div[2]/div/div/div[3]/div[2]/div[2]/form/div[3]/div[2]/div[3]/label/div[2]/input")).SendKeys(CUrl);
+
                     // tammama tıklama 
                     ChromeDriver.FindElement(By.XPath("/html/body/div[1]/div[7]/div[3]/div/div[2]/div/div/div[3]/div[2]/div[2]/form/div[7]/button[1]")).Click();
                     
